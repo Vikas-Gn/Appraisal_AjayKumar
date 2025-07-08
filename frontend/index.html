@@ -319,7 +319,7 @@
             container.innerHTML = '';
 
             try {
-                const response = await fetch('http://localhost:3001/api/appraisals');
+                const response = await fetch('http://13.235.128.250:3082/api/appraisals');
                 const appraisals = await response.json();
 
                 if (appraisals.length === 0) {
