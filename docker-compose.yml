@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: appraisal-postgres
+    ports:
+      - "5049:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: new_employee_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    restart: always
+
+  backend:
+    build: ./backend
+    container_name: appraisal-backend
+    ports:
+      - "3082:3082"
+    depends_on:
+      - postgres
+    environment:
+      DB_USER: postgres
+      DB_PASSWORD: admin123
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: new_employee_db
+      FRONTEND_URL: http://localhost:9033
+    restart: always
+
+  frontend:
+    build: ./frontend
+    container_name: appraisal-frontend
+    ports:
+      - "9033:80"
+    restart: always
+
+  hr-page:
+    build: ./Hr_page
+    container_name: appraisal-hr-page
+    ports:
+      - "9034:80"
+    restart: always
+
+volumes:
+  postgres-data:
+
